@@ -1,0 +1,53 @@
+{
+  "alias": "s.cserdean.me",
+  "version": 2,
+  "name": "lambda-shrt",
+  "builds": [
+    {
+      "src": "api/go.mod",
+      "use": "@torbensky/go-mod"
+    },
+    {
+      "src": "www/package.json",
+      "use": "@now/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/sh",
+      "dest": "/api/cmd/shorten/lambda.go"
+    },
+    {
+      "src": "/([a-zA-Z0-9]{5})",
+      "dest": "/api/cmd/redirect/lambda.go?id=$1"
+    },
+    {
+      "src": "/api/u",
+      "dest": "/api/cmd/upload/lambda.go"
+    },
+    {
+      "src": "/api/t/([a-zA-Z0-9]{6})",
+      "dest": "/api/cmd/transfer/lambda.go?id=$1"
+    },
+    {
+      "src": "/t",
+      "dest": "/www/upload"
+    },
+    {
+      "src": "/d/([a-zA-Z0-9]{6})",
+      "dest": "/api/cmd/upload/lambda.go?id=$1"
+    },
+    {
+      "src": "/([a-zA-Z0-9]{6})",
+      "dest": "/www/transfer?id=$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/www/$1"
+    }
+  ],
+  "env": {
+    "MONGO_URI": "@shrt_uri",
+    "FB_JSON": "@fb-json"
+  }
+}

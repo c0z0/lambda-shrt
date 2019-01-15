@@ -1,0 +1,4 @@
+dev-tools/.env
+www/node_modules
+www/.next
+www/yarn.lock
