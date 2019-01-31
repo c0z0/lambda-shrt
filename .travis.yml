@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- stable
+before_install: cd www
+before_deploy: cd ..
+deploy:
+  - provider: script
+    script: npm install -g now && now --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias travis-test.s.cserdean.me
+    on:
+      branch: master
+  - provider: script
+    script: npm install -g now && now --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias dev.s.cserdean.me
+    on:
+      branch: dev

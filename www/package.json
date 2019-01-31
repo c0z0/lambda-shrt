@@ -14,6 +14,7 @@
   "scripts": {
     "start": "next start",
     "dev": "next",
-    "build": "next build"
+    "build": "next build",
+    "test": "echo 'No tests yet'"
   }
 }
