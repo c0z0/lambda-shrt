@@ -131,93 +131,111 @@ export default class Upload extends Component {
         <a href="https://github.com/c0z0/shrt-ui" className="src">
           [src]
         </a>
-        <Link href="/">
-          <a className="src t">shrt</a>
-        </Link>
         <Head>
           <title>Transfer</title>
         </Head>
-        <div className="card">
-          <div className="inner-container">
-            {url && this.renderUrl()}
+        <div>
+          <div className="card">
             <div className="inner-container">
-              <form onSubmit={this.upload.bind(this)}>
-                <div className="file-input__container">
-                  <h2 className="title">
-                    {file ? file.name : "+ Add your file"}
-                  </h2>
-                  {file && (
-                    <p className="file-size">{this.bytesToSize(file.size)}</p>
-                  )}
-                  <input
-                    disabled={loading}
-                    type="file"
-                    className="file-input"
-                    onChange={e => {
-                      const [file] = e.target.files;
-                      if (file.size > 2e9)
-                        return alert("File exceeds maximum of 2GB");
-                      this.setState({ file: file });
-                      console.log(e.target.files[0]);
-                    }}
-                  />
-                </div>
-                {/* <div className="input__container">
+              {url && this.renderUrl()}
+              <div className="inner-container">
+                <form onSubmit={this.upload.bind(this)}>
+                  <div className="file-input__container">
+                    <h2 className="title">
+                      {file ? file.name : "+ Add your file"}
+                    </h2>
+                    {file && (
+                      <p className="file-size">{this.bytesToSize(file.size)}</p>
+                    )}
+                    <input
+                      disabled={loading}
+                      type="file"
+                      className="file-input"
+                      onChange={e => {
+                        const [file] = e.target.files;
+                        if (file.size > 2e9)
+                          return alert("File exceeds maximum of 2GB");
+                        this.setState({ file: file });
+                        console.log(e.target.files[0]);
+                      }}
+                    />
+                  </div>
+                  {/* <div className="input__container">
 							<input type="email" className="input" placeholder="Email to" />
 						</div> */}
-                <div className="input__container">
-                  <input
-                    disabled={loading}
-                    type="text"
-                    className="input"
-                    placeholder="Your name"
-                    value={senderName}
-                    onChange={({ target: { value } }) =>
-                      this.setState({ senderName: value })
-                    }
-                  />
-                </div>
-                <div className="input__container">
-                  <textarea
-                    disabled={loading}
-                    className="input"
-                    placeholder="Message"
-                    rows="2"
-                    value={message}
-                    onChange={({ target: { value } }) =>
-                      this.setState({ message: value })
-                    }
-                  />
-                </div>
-                {error && <p className="error">Something went wrong</p>}
-                <input
-                  type="submit"
-                  value={
-                    loading ? "Loading" : url ? "Upload another" : "Upload"
-                  }
-                  className={`submit-button ${
-                    (!file ||
-                      !message.length ||
-                      !senderName.length ||
-                      loading) &&
-                    !url
-                      ? "submit-button--disabled"
-                      : ""
-                  }`}
-                  disabled={
-                    (!file ||
-                      !message.length ||
-                      !senderName.length ||
-                      loading) &&
-                    !url
-                  }
-                />
-              </form>
+                  <div className="input__container">
+                    <input
+                      disabled={loading}
+                      type="text"
+                      className="input"
+                      placeholder="Your name"
+                      value={senderName}
+                      onChange={({ target: { value } }) =>
+                        this.setState({ senderName: value })
+                      }
+                    />
+                  </div>
+                  <div className="input__container">
+                    <textarea
+                      disabled={loading}
+                      className="input"
+                      placeholder="Message"
+                      rows="2"
+                      value={message}
+                      onChange={({ target: { value } }) =>
+                        this.setState({ message: value })
+                      }
+                    />
+                  </div>
+                  {error && <p className="error">Something went wrong</p>}
+                  <div className="submit--wrapper">
+                    <input
+                      type="submit"
+                      value={
+                        loading ? "Loading" : url ? "Upload another" : "Upload"
+                      }
+                      className={`submit-button ${
+                        (!file ||
+                          !message.length ||
+                          !senderName.length ||
+                          loading) &&
+                        !url
+                          ? "submit-button--disabled"
+                          : ""
+                      }`}
+                      disabled={
+                        (!file ||
+                          !message.length ||
+                          !senderName.length ||
+                          loading) &&
+                        !url
+                      }
+                    />
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
+          <Link href="/" prefetch>
+            <a className="upload">Shorten an url...</a>
+          </Link>
         </div>
 
         <style jsx>{`
+          .submit--wrapper {
+            display: flex;
+            justify-content: flex-end;
+          }
+
+          .upload {
+            color: #000 !important;
+            opacity: 0.5;
+            text-decoration: none;
+            transition: 0.2s all;
+            text-align: center;
+            display: block;
+          }
+
           .container {
             display: flex;
             justify-content: center;
@@ -227,6 +245,7 @@ export default class Upload extends Component {
 
           .card {
             border: 1px #ddd solid;
+            margin-bottom: 12px;
             border-radius: 4px;
           }
 
@@ -245,8 +264,9 @@ export default class Upload extends Component {
             right: 16px;
           }
 
-          .t {
-            left: 16px;
+          .upload:hover,
+          .src:hover {
+            opacity: 1;
           }
 
           .inner-container {
@@ -333,7 +353,6 @@ export default class Upload extends Component {
             font-size: 12px;
             cursor: pointer;
             border-radius: 4px;
-            float: right;
           }
 
           .submit-button--disabled {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { withRouter } from "next/router";
 import Link from "next/link";
+import fetch from "isomorphic-fetch";
 
 function bytesToSize(bytes) {
   const sizes = ["B", "KB", "MB", "GB", "TB"];
@@ -10,40 +11,8 @@ function bytesToSize(bytes) {
   return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
 }
 
-export default withRouter(function Transfer(props) {
-  const id = props.router.query.id;
-
-  const [data, setData] = useState({
-    loading: true,
-    error: false,
-    transfer: null,
-    downloading: false
-  });
-
-  useEffect(
-    () => {
-      (async () => {
-        const res = await fetch(`/api/t/${id}`);
-
-        if (!res.ok) {
-          return setData({
-            loading: false,
-            error: true,
-            transfer: null
-          });
-        }
-
-        const transfer = await res.json();
-
-        setData({
-          loading: false,
-          error: false,
-          transfer
-        });
-      })();
-    },
-    [id]
-  );
+function Transfer({ transfer, error }) {
+  const [downloading, setDownloading] = useState(false);
 
   function renderError(text) {
     return (
@@ -51,9 +20,6 @@ export default withRouter(function Transfer(props) {
         <a href="https://github.com/c0z0/shrt-ui" className="src">
           [src]
         </a>
-        <Link href="/">
-          <a className="src t">shrt</a>
-        </Link>
         <div className="card">
           <div className="file-name__container">
             <h2 className="title">{text}</h2>
@@ -66,7 +32,6 @@ export default withRouter(function Transfer(props) {
             align-items: center;
             height: 100vh;
           }
-
           .card {
             border: 1px #ddd solid;
             border-radius: 4px;
@@ -75,15 +40,12 @@ export default withRouter(function Transfer(props) {
           .message {
             padding: 16px;
           }
-
           .message span {
             color: #777;
           }
-
           a {
             text-decoration: none;
           }
-
           .src {
             color: #000 !important;
             opacity: 0.5;
@@ -94,11 +56,9 @@ export default withRouter(function Transfer(props) {
             top: 16px;
             right: 16px;
           }
-
           .t {
             left: 16px;
           }
-
           .download-button {
             margin: 32px;
             border: none;
@@ -114,6 +74,7 @@ export default withRouter(function Transfer(props) {
           }
           .title {
             font-weight: normal;
+            color: red;
             margin: 0;
             padding: 0;
             text-overflow: ellipsis;
@@ -122,12 +83,10 @@ export default withRouter(function Transfer(props) {
             overflow: hidden;
             white-space: nowrap;
           }
-
           .file-size {
             color: #ccc;
             margin: 0;
           }
-
           .file-name__container {
             position: relative;
             display: flex;
@@ -152,38 +111,40 @@ export default withRouter(function Transfer(props) {
     );
   }
 
-  if (data.loading) return renderError("Loading");
-  if (data.error) return renderError("Error");
+  if (error) return renderError("Error");
 
-  const { message, fburl, fileName, senderName, fileSize } = data.transfer;
+  const { message, fburl, fileName, senderName, fileSize } = transfer;
 
   return (
     <div className="container">
       <a href="https://github.com/c0z0/shrt-ui" className="src">
         [src]
       </a>
-      <Link href="/">
-        <a className="src t">shrt</a>
-      </Link>
-      <div className="card">
-        <Head>
-          <title>{fileName} - Transfer</title>
-        </Head>
-        <div className="file-name__container">
-          <h2 className="title">{fileName}</h2>
-          <p className="file-size">{bytesToSize(fileSize)}</p>
-        </div>
-        <p className="message">
-          Message: <span>{message}</span>
-        </p>
-        <p className="message">
-          From: <span>{senderName}</span>
-        </p>
-        <a href={fburl} onClick={() => setData({ ...data, downloading: true })}>
-          <div className="download-button">
-            {data.downloading ? "Downloading" : "Download"}
+
+      <div>
+        <div className="card">
+          <Head>
+            <title>{fileName} - Transfer</title>
+          </Head>
+          <div className="file-name__container">
+            <h2 className="title">{fileName}</h2>
+            <p className="file-size">{bytesToSize(fileSize)}</p>
           </div>
-        </a>
+          <p className="message">
+            Message: <span>{message}</span>
+          </p>
+          <p className="message">
+            From: <span>{senderName}</span>
+          </p>
+          <a href={fburl} onClick={() => setDownloading(true)}>
+            <div className="download-button">
+              {downloading ? "Downloading" : "Download"}
+            </div>
+          </a>
+        </div>
+        <Link href="/upload" as="/t" prefetch>
+          <a className="upload">Upload your own file...</a>
+        </Link>
       </div>
       <style jsx>{`
         .container {
@@ -197,9 +158,10 @@ export default withRouter(function Transfer(props) {
           border: 1px #ddd solid;
           border-radius: 4px;
           width: 366px;
+          margin-bottom: 12px;
         }
         .message {
-          padding: 16px;
+          margin: 32px;
         }
 
         .message span {
@@ -221,12 +183,22 @@ export default withRouter(function Transfer(props) {
           right: 16px;
         }
 
-        .t {
-          left: 16px;
+        .upload {
+          color: #000 !important;
+          opacity: 0.5;
+          text-decoration: none;
+          transition: 0.2s all;
+          text-align: center;
+          display: block;
+        }
+        .upload:hover,
+        .src:hover {
+          opacity: 1;
         }
 
         .download-button {
-          margin: 32px;
+          margin: 16px 32px;
+          margin-top: 32px;
           border: none;
           outline: none;
           padding: 12px;
@@ -236,8 +208,8 @@ export default withRouter(function Transfer(props) {
           font-size: 12px;
           cursor: pointer;
           border-radius: 4px;
-          float: right;
         }
+
         .title {
           font-weight: normal;
           margin: 0;
@@ -277,4 +249,23 @@ export default withRouter(function Transfer(props) {
       `}</style>
     </div>
   );
-});
+}
+
+Transfer.getInitialProps = async ({ query, req }) => {
+  const apiBase = req ? "https://s.cserdean.me" : "";
+
+  try {
+    const res = await fetch(`${apiBase}/api/t/${query.id}`);
+
+    if (!res.ok) return { error: true, transfer: false };
+
+    const transfer = await res.json();
+
+    return { transfer, error: false };
+  } catch (e) {
+    console.log(e);
+    return { error: true, transfer: null };
+  }
+};
+
+export default withRouter(Transfer);

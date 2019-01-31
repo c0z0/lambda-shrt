@@ -46,39 +46,43 @@ export default class Index extends Component {
         <a href="https://github.com/c0z0/shrt-ui" className="src">
           [src]
         </a>
-        <Link href="/upload" as="/t">
-          <a className="src t">trnsfr</a>
-        </Link>
         <Head>
           <title>SHRT</title>
         </Head>
-        <div className="card">
-          <h1 className="title">shrt</h1>
-          <form onSubmit={this.onSubmit.bind(this)}>
-            <div className="input__container">
-              <input
-                id="js-url"
-                disabled={loading}
-                type="text"
-                className={classBuilder("input", {
-                  "input--invalid": !inputValid && url.length > 0,
-                  "input--disabled": loading
-                })}
-                placeholder="Url..."
-                onChange={this.updateInput.bind(this)}
-                value={url}
-              />
-              {error && <p className="input__invalid-message">{error}</p>}
-            </div>
-            <input
-              disabled={buttonDisabled}
-              type="submit"
-              value={loading ? "Loading..." : "Shorten"}
-              className={classBuilder("submit-button", {
-                "submit-button--disabled": buttonDisabled
-              })}
-            />
-          </form>
+        <div>
+          <div className="card">
+            <h1 className="title">shrt</h1>
+            <form onSubmit={this.onSubmit.bind(this)}>
+              <div className="input__container">
+                <input
+                  id="js-url"
+                  disabled={loading}
+                  type="text"
+                  className={classBuilder("input", {
+                    "input--invalid": !inputValid && url.length > 0,
+                    "input--disabled": loading
+                  })}
+                  placeholder="Url..."
+                  onChange={this.updateInput.bind(this)}
+                  value={url}
+                />
+                {error && <p className="input__invalid-message">{error}</p>}
+              </div>
+              <div className="submit--wrapper">
+                <input
+                  disabled={buttonDisabled}
+                  type="submit"
+                  value={loading ? "Loading..." : "Shorten"}
+                  className={classBuilder("submit-button", {
+                    "submit-button--disabled": buttonDisabled
+                  })}
+                />
+              </div>
+            </form>
+          </div>
+          <Link href="/upload" as="/t" prefetch>
+            <a className="upload">Share a file...</a>
+          </Link>
         </div>
         <style jsx>{`
           .container {
@@ -90,7 +94,27 @@ export default class Index extends Component {
 
           .card {
             border: 1px #ddd solid;
+            margin-bottom: 12px;
             border-radius: 4px;
+          }
+
+          .upload {
+            color: #000 !important;
+            opacity: 0.5;
+            text-decoration: none;
+            transition: 0.2s all;
+            text-align: center;
+            display: block;
+          }
+
+          .upload:hover,
+          .src:hover {
+            opacity: 1;
+          }
+
+          .submit--wrapper {
+            display: flex;
+            justify-content: flex-end;
           }
 
           .title {
@@ -147,7 +171,6 @@ export default class Index extends Component {
             font-size: 12px;
             cursor: pointer;
             border-radius: 4px;
-            float: right;
           }
 
           .submit-button--disabled {
@@ -164,10 +187,6 @@ export default class Index extends Component {
             position: absolute;
             top: 16px;
             right: 16px;
-          }
-
-          .t {
-            left: 16px;
           }
 
           .src:hover {
