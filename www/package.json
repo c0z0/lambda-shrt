@@ -8,8 +8,8 @@
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "next": "^8.0.0-canary.2",
-    "react": "16.7.0-alpha.0 - next",
-    "react-dom": "16.7.0-alpha.0 - next"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "scripts": {
     "start": "next start",
