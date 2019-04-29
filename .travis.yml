@@ -5,10 +5,10 @@ before_install: cd www
 before_deploy: cd ..
 deploy:
   - provider: script
-    script: npm install -g now && now --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias s.cserdean.me
+    script: npm install -g now && now --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias s.cserdean.com
     on:
       branch: master
   - provider: script
-    script: npm install -g now && now --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias dev.s.cserdean.me
+    script: npm install -g now && now --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias dev.s.cserdean.com
     on:
       branch: dev

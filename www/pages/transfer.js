@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import Head from "next/head";
-import { withRouter } from "next/router";
-import Link from "next/link";
-import fetch from "isomorphic-fetch";
+import React, { useState, useEffect } from 'react'
+import Head from 'next/head'
+import { withRouter } from 'next/router'
+import Link from 'next/link'
+import fetch from 'isomorphic-fetch'
 
 function bytesToSize(bytes) {
-  const sizes = ["B", "KB", "MB", "GB", "TB"];
-  if (bytes == 0) return "0 Byte";
-  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-  return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+  if (bytes == 0) return '0 Byte'
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+  return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i]
 }
 
 function Transfer({ transfer, error }) {
-  const [downloading, setDownloading] = useState(false);
+  const [downloading, setDownloading] = useState(false)
 
   function renderError(text) {
     return (
@@ -102,18 +102,18 @@ function Transfer({ transfer, error }) {
             margin: 0;
             padding: 0;
             color: #000;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-              "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-              "Helvetica Neue", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+              'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+              'Helvetica Neue', sans-serif;
           }
         `}</style>
       </div>
-    );
+    )
   }
 
-  if (error) return renderError("Error");
+  if (error) return renderError('Error')
 
-  const { message, fburl, fileName, senderName, fileSize } = transfer;
+  const { message, fburl, fileName, senderName, fileSize } = transfer
 
   return (
     <div className="container">
@@ -138,7 +138,7 @@ function Transfer({ transfer, error }) {
           </p>
           <a href={fburl} onClick={() => setDownloading(true)}>
             <div className="download-button">
-              {downloading ? "Downloading" : "Download"}
+              {downloading ? 'Downloading' : 'Download'}
             </div>
           </a>
         </div>
@@ -242,30 +242,30 @@ function Transfer({ transfer, error }) {
           margin: 0;
           padding: 0;
           color: #000;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-            "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-            "Helvetica Neue", sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+            'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+            'Helvetica Neue', sans-serif;
         }
       `}</style>
     </div>
-  );
+  )
 }
 
 Transfer.getInitialProps = async ({ query, req }) => {
-  const apiBase = req ? "https://s.cserdean.me" : "";
+  const apiBase = req ? 'https://s.cserdean.com' : ''
 
   try {
-    const res = await fetch(`${apiBase}/api/t/${query.id}`);
+    const res = await fetch(`${apiBase}/api/t/${query.id}`)
 
-    if (!res.ok) return { error: true, transfer: false };
+    if (!res.ok) return { error: true, transfer: false }
 
-    const transfer = await res.json();
+    const transfer = await res.json()
 
-    return { transfer, error: false };
+    return { transfer, error: false }
   } catch (e) {
-    console.log(e);
-    return { error: true, transfer: null };
+    console.log(e)
+    return { error: true, transfer: null }
   }
-};
+}
 
-export default withRouter(Transfer);
+export default withRouter(Transfer)

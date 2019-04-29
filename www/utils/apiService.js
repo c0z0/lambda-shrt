@@ -1,4 +1,4 @@
-// const apiUrl = 'https://s.cserdean.me/'
+// const apiUrl = 'https://s.cserdean.com/'
 const apiUrl = '/api/'
 /**
  * Hits the api and returns the shortened url
